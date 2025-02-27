@@ -57,7 +57,7 @@ def main() -> None:
         description=f"List open GitHub issues in repositories {', '.join(REPOS)}.\nOnly issues with labels {', '.join(LABELS)} are shown.\nYou first need to set the environment variable GITHUB_TOKEN.",
         formatter_class=argparse.RawTextHelpFormatter
     )
-    parser.add_argument("-s", "--sort", type=str, required=False, help="Sort by any column name, like '-s name'. Or sort by multiple columns, separated by comma, like '-s name,label'")
+    parser.add_argument("-s", "--sort", type=str, required=False, help="Sort by any column name, like '-s user'. Or sort by multiple columns, separated by comma, like '-s user,language'")
     parser.add_argument("-r", "--reverse", action='store_true', required=False, help="Reverse sort")
     args = parser.parse_args()
     if hasattr(args, 'help'):

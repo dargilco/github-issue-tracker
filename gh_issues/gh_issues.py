@@ -71,8 +71,8 @@ def main() -> None:
     except KeyError:
         print(
             "\nERROR: environment variable GITHUB_TOKEN not defined.\n"
-            "To get a GitHub token, and configure it for Single Sign On (SSO), do the following:\n"
-            "(1) Go to https://github.com/settings/apps -> Personal access tokens -> Tokens (classic) -> Select 'Generate new toke'n, then click' Generate new token (classic)'.\n"
+            "To get a GitHub token, and configure it for Single Sign On (SSO) to the Azure group (https://github.com/Azure), do the following:\n"
+            "(1) Go to https://github.com/settings/apps -> Personal access tokens -> Tokens (classic) -> Select 'Generate new token', then click' Generate new token (classic)'.\n"
             "(2) After you created the token, go back to https://github.com/settings/apps -> Personal access tokens -> Tokens (classic) , then click on 'Configure SSO' on the right, and select 'Azure'.\n\n"
         )
         parser.print_help()

@@ -1,6 +1,6 @@
 # Python script to list open GitHub issues in Azure repositories
 
-## Usage help
+## Usage
 
 Run the script with `-h` or `--help` argument to get usage help:
 
@@ -33,20 +33,20 @@ To get a GitHub token, and configure it for Single Sign On (SSO) to the Azure gr
 ## Example output
 
 ```text
-Sort by: user,language
+Sort by: user,label
 
-user       | language | label              | number | title                                                                                                      | created    | url
----------- + -------- + ------------------ + ------ + ---------------------------------------------------------------------------------------------------------- + ---------- + ----------------------------------------------------------
-dargilco   | python   | AI Projects        | 39782  | Prerequisite lists "Contributor" role but "Azure AI Developer" role needed                                 | 2025-02-18 | https://github.com/Azure/azure-sdk-for-python/issues/39782
-jhakulin   | python   | AI Projects        | 39816  | AzureAISearchTool fails with missing_required_parameter - AML connections are required for AI Search tool. | 2025-02-21 | https://github.com/Azure/azure-sdk-for-python/issues/39816
-lmolkova   | python   | AI Projects        | 39753  | Agents tracing: we don't suppress generic spans                                                            | 2025-02-14 | https://github.com/Azure/azure-sdk-for-python/issues/39753
-m-hietala  | python   | AI Projects        | 39833  | Agent Service Tracing: 'AIProjectClient' object does not support the context manager protocol              | 2025-02-22 | https://github.com/Azure/azure-sdk-for-python/issues/39833
-nick863    | net      | AI Projects        | 48333  | [BUG] AI Agent SDK fails to deserialize file search when using streaming                                   | 2025-02-18 | https://github.com/Azure/azure-sdk-for-net/issues/48333
-nick863    | python   | AI Projects        | 39778  | AI Project client says "Invalid tool value(s): azure_function"                                             | 2025-02-18 | https://github.com/Azure/azure-sdk-for-python/issues/39778
-trangevi   | net      | AI Model Inference | 48414  | Inconsistent API results in CompleteStreamingAsync                                                         | 2025-02-24 | https://github.com/Azure/azure-sdk-for-net/issues/48414
-trangevi   | net      | AI Model Inference | 48405  | [FEATURE REQ] Allow the API version in AzureAIInferenceClientOptions to be configurable                    | 2025-02-23 | https://github.com/Azure/azure-sdk-for-net/issues/48405
-trangevi   | net      | AI Model Inference | 47069  | [FEATURE REQ] Resolve Native AOT Warnings in Azure.AI.Inference                                            | 2024-11-11 | https://github.com/Azure/azure-sdk-for-net/issues/47069
-trangevi   | net      | AI Model Inference | 46830  | [BUG] Impossible to correctly handle parallel tool calls with Azure.AI.Inference                           | 2024-10-24 | https://github.com/Azure/azure-sdk-for-net/issues/46830
-trangevi   | python   | AI Model Inference | 39835  | ResourceNotFoundError exception raised on client.complete method                                           | 2025-02-23 | https://github.com/Azure/azure-sdk-for-python/issues/39835
-
+user       | language | label              | number | title                                                                                                      | days | created    | url
+---------- + -------- + ------------------ + ------ + ---------------------------------------------------------------------------------------------------------- + ---- + ---------- + ----------------------------------------------------------
+dargilco   | python   | AI Projects        | 39887  | azure-ai-projects 403 nginx forbidden returned for get_agent                                               | 0    | 2025-02-27 | https://github.com/Azure/azure-sdk-for-python/issues/39887
+dargilco   | python   | AI Projects        | 39782  | Prerequisite lists "Contributor" role but "Azure AI Developer" role needed                                 | 9    | 2025-02-18 | https://github.com/Azure/azure-sdk-for-python/issues/39782
+jhakulin   | python   | AI Projects        | 39816  | AzureAISearchTool fails with missing_required_parameter - AML connections are required for AI Search tool. | 6    | 2025-02-21 | https://github.com/Azure/azure-sdk-for-python/issues/39816
+lmolkova   | python   | AI Projects        | 39753  | Agents tracing: we don't suppress generic spans                                                            | 12   | 2025-02-14 | https://github.com/Azure/azure-sdk-for-python/issues/39753
+m-hietala  | python   | AI Projects        | 39833  | Agent Service Tracing: 'AIProjectClient' object does not support the context manager protocol              | 5    | 2025-02-22 | https://github.com/Azure/azure-sdk-for-python/issues/39833
+nick863    | python   | AI Projects        | 39778  | AI Project client says "Invalid tool value(s): azure_function"                                             | 9    | 2025-02-18 | https://github.com/Azure/azure-sdk-for-python/issues/39778
+nick863    | net      | AI Projects        | 48333  | [BUG] AI Agent SDK fails to deserialize file search when using streaming                                   | 9    | 2025-02-18 | https://github.com/Azure/azure-sdk-for-net/issues/48333
+trangevi   | python   | AI Model Inference | 39835  | ResourceNotFoundError exception raised on client.complete method                                           | 4    | 2025-02-23 | https://github.com/Azure/azure-sdk-for-python/issues/39835
+trangevi   | net      | AI Model Inference | 48414  | Inconsistent API results in CompleteStreamingAsync                                                         | 3    | 2025-02-24 | https://github.com/Azure/azure-sdk-for-net/issues/48414
+trangevi   | net      | AI Model Inference | 48405  | [FEATURE REQ] Allow the API version in AzureAIInferenceClientOptions to be configurable                    | 4    | 2025-02-23 | https://github.com/Azure/azure-sdk-for-net/issues/48405
+trangevi   | net      | AI Model Inference | 47069  | [FEATURE REQ] Resolve Native AOT Warnings in Azure.AI.Inference                                            | 107  | 2024-11-11 | https://github.com/Azure/azure-sdk-for-net/issues/47069
+trangevi   | net      | AI Model Inference | 46830  | [BUG] Impossible to correctly handle parallel tool calls with Azure.AI.Inference                           | 125  | 2024-10-24 | https://github.com/Azure/azure-sdk-for-net/issues/46830
 ```

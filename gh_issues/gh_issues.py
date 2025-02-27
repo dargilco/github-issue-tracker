@@ -2,7 +2,7 @@ import os
 import re
 import requests
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Any, Dict
 
 # Update these lists with the repositories and labels you want to search for
@@ -26,6 +26,7 @@ def print_results(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> Non
         f"{'label'.ljust(max_len['label'])} | " +
         f"{'number'.ljust(max_len['number'])} | " +
         f"{'title'.ljust(max_len['title'])} | " +
+        f"{'days'.ljust(max_len['days'])} | " +
         f"{'created'.ljust(max_len['created'])} | " +
         "url"
     )
@@ -35,6 +36,7 @@ def print_results(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> Non
         f"{'-' * max_len['label']} + " +
         f"{'-' * max_len['number']} + " +
         f"{'-' * max_len['title']} + " +
+        f"{'-' * max_len['days']} + " +
         f"{'-' * max_len['created']} + " +
         f"{'-' * max_len['url']}"
     )
@@ -45,6 +47,7 @@ def print_results(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> Non
             f"{result['label'].ljust(max_len['label']) if result['label'] else 'NO LABELS'.ljust(max_len['label'])} | "
             f"{result['number'].ljust(max_len['number'])} | "
             f"{result['title'].ljust(max_len['title'])} | "
+            f"{result['days'].ljust(max_len['days'])} | "
             f"{result['created'].ljust(max_len['created'])} | "
             f"{result['url'].ljust(max_len['url'])}"
         )
@@ -89,6 +92,7 @@ def main() -> None:
         "language": len("language"),
         "user": len("UNASSIGNED"),
         "label": len("label"),
+        "days": len("days"),
         "created": len("created")
     }
 
@@ -130,6 +134,10 @@ def main() -> None:
                     if label['name'] in LABELS:
                         labels.append(label['name'])
 
+                # Parse the created date and convert it to a datetime object, UTC time zone
+                created = datetime.strptime(issue['created_at'], "%Y-%m-%dT%H:%M:%SZ")
+                created = created.replace(tzinfo=timezone.utc)
+
                 # Extract only the info you need from the result, to build one row in the output table
                 result : Dict[str,str] = {
                     "number": str(issue['number']),
@@ -138,7 +146,8 @@ def main() -> None:
                     "language": extract_language(issue['html_url']),
                     "user": ", ".join([assignee['login'].lower() for assignee in issue['assignees']]),
                     "label": ", ".join(labels),
-                    "created": datetime.strptime(issue['created_at'], "%Y-%m-%dT%H:%M:%SZ").date().strftime("%Y-%m-%d")
+                    "created": created.date().strftime("%Y-%m-%d"),
+                    "days": str((datetime.now(timezone.utc) - created).days)
                 }
 
                 # Update the max length of each column if needed, so we can align columns during printout
@@ -152,7 +161,7 @@ def main() -> None:
     if args.sort:
         sort_keys = [key.strip() for key in args.sort.split(',')]
         def sort_key_func(d):
-            return tuple(d[key] for key in sort_keys)
+            return tuple((int(d[key]) if (key == 'days' or key =='number') else d[key]) for key in sort_keys)
         results.sort(key=sort_key_func, reverse=args.reverse)
 
     # Print the table to the console

@@ -118,8 +118,7 @@ def main() -> None:
             for issue in issues:
                 # Skip pull requests. We only want to list GitHub issues
                 if "/pull/" in issue['html_url']:
-                    pass
-                    #continue
+                    continue
 
                 # Enable these two lines to dump the raw response in JSON format
                 #import json

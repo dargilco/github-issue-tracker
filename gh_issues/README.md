@@ -27,8 +27,8 @@ options:
 
 To get a GitHub token, and configure it for Single Sign On (SSO) to the Azure group (https://github.com/Azure), do the following:
 
-1. Go to https://github.com/settings/apps -> Personal access tokens -> Tokens (classic) -> Select `Generate new token`, then click `Generate new token (classic)`.\n"
-1. After you created the token, go back to https://github.com/settings/apps -> Personal access tokens -> Tokens (classic) , then click on `Configure SSO` on the right, and select `Azure`.
+1. Go to https://github.com/settings/apps -> `Personal access tokens` -> `Tokens (classic)` -> Select `Generate new token`, then click `Generate new token (classic)`."
+1. After you created the token, go back to https://github.com/settings/apps -> `Personal access tokens` -> `Tokens (classic)` , then click on `Configure SSO` on the right, and select `Azure`.
 
 ## Example output
 

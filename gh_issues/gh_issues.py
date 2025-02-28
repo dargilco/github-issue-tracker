@@ -147,7 +147,7 @@ def main() -> None:
                     "user": ", ".join([assignee['login'].lower() for assignee in issue['assignees']]),
                     "label": ", ".join(labels),
                     "created": created.date().strftime("%Y-%m-%d"),
-                    "days": str((datetime.now(timezone.utc) - created).days)
+                    "days": str((datetime.now(timezone.utc).date() - created.date()).days)
                 }
 
                 # Update the max length of each column if needed, so we can align columns during printout

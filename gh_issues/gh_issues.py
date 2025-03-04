@@ -5,9 +5,14 @@ import argparse
 from datetime import datetime, timezone
 from typing import List, Any, Dict
 
-# Update these lists with the repositories and labels you want to search for
+# Update these lists with the repositories you want to search
 REPOS = ["azure-sdk-for-python", "azure-sdk-for-net", "azure-sdk-for-java", "azure-sdk-for-js"]
+
+# And the labels you want to search
 LABELS = ["AI Projects", "AI Model Inference"]
+
+# Additional labels you want to show in the output table, in the "label" column.
+ADDITIONAL_LABELS= ["feature-request"]
 
 
 # Extract the programming language part from a GitHub issue URL
@@ -62,6 +67,8 @@ def main() -> None:
     )
     parser.add_argument("-s", "--sort", type=str, required=False, help="Sort by any column name, like '-s user'. Or sort by multiple columns, separated by comma, like '-s user,language'")
     parser.add_argument("-r", "--reverse", action='store_true', required=False, help="Reverse sort")
+    parser.add_argument("-n", "--no-features", action='store_true', required=False, help="Do not include issues labeled `feature-request`")
+    
     args = parser.parse_args()
     if hasattr(args, 'help'):
         parser.print_help()
@@ -128,10 +135,18 @@ def main() -> None:
                 #import json
                 #print(json.dumps(issue, indent=4))
 
-                # We don't show all the labels, only the ones we care about as defined above
+                # Skip showing issues labeled as `feature-request` if the user requested it
+                if (args.no_features and 'feature-request' in [label['name'] for label in issue['labels']]):
+                    continue
+
+                # We don't show all the labels, only the ones we care about as defined above.
+                # First show labels from LABELS, then show labels from ADDITIONAL_LABELS.
                 labels: List[str] = []
                 for label in issue['labels']:
                     if label['name'] in LABELS:
+                        labels.append(label['name'])
+                for label in issue['labels']:
+                    if label['name'] in ADDITIONAL_LABELS:
                         labels.append(label['name'])
 
                 # Parse the created date and convert it to a datetime object, UTC time zone

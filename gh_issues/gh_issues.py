@@ -68,13 +68,19 @@ def main() -> None:
     parser.add_argument("-s", "--sort", type=str, required=False, help="Sort by any column name, like '-s user'. Or sort by multiple columns, separated by comma, like '-s user,language'")
     parser.add_argument("-r", "--reverse", action='store_true', required=False, help="Reverse sort")
     parser.add_argument("-n", "--no-features", action='store_true', required=False, help="Do not include issues labeled `feature-request`")
-    
+
     args = parser.parse_args()
     if hasattr(args, 'help'):
         parser.print_help()
         return
+
+    print(f"Repos: {', '.join(REPOS)}")
+    print(f"Labels: {', '.join(LABELS)}")
+    if args.no_features:
+        print(f"Excluding label: feature-request")
     if args.sort:
-        print(f"Sort by: {args.sort} {'(reversed)' if args.reverse else ''} {'(excluding label `feature-request`)' if args.no_features else ''}\n")
+        print(f"Sort by: {args.sort} {'(reversed)' if args.reverse else ''}")
+    print("")
 
     try:
         github_token = os.environ["GITHUB_TOKEN"]

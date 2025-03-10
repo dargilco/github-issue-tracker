@@ -74,7 +74,7 @@ def main() -> None:
         parser.print_help()
         return
     if args.sort:
-        print(f"Sort by: {args.sort} {'(reversed)' if args.reverse else ''}\n")
+        print(f"Sort by: {args.sort} {'(reversed)' if args.reverse else ''} {'(excluding label `feature-request`)' if args.no_features else ''}\n")
 
     try:
         github_token = os.environ["GITHUB_TOKEN"]

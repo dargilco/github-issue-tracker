@@ -25,6 +25,9 @@ def extract_language(url) -> str:
 
 # Print the resulting table to the console
 def print_results(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> None:
+
+    is_closed: bool  = 'closed' in results[0]
+
     print(
         f"{'user'.ljust(max_len['user'])} | " +
         f"{'language'.ljust(max_len['language'])} | " +
@@ -32,7 +35,7 @@ def print_results(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> Non
         f"{'number'.ljust(max_len['number'])} | " +
         f"{'title'.ljust(max_len['title'])} | " +
         f"{'days'.ljust(max_len['days'])} | " +
-        f"{'created'.ljust(max_len['created'])} | " +
+        f"{'closed'.ljust(max_len['closed']) if is_closed else 'created'.ljust(max_len['created'])} | " +
         "url"
     )
     print(
@@ -42,7 +45,7 @@ def print_results(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> Non
         f"{'-' * max_len['number']} + " +
         f"{'-' * max_len['title']} + " +
         f"{'-' * max_len['days']} + " +
-        f"{'-' * max_len['created']} + " +
+        f"{'-' * max_len['closed'] if is_closed else '-' * max_len['created']} + " +
         f"{'-' * max_len['url']}"
     )
     for result in results:
@@ -53,7 +56,7 @@ def print_results(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> Non
             f"{result['number'].ljust(max_len['number'])} | "
             f"{result['title'].ljust(max_len['title'])} | "
             f"{result['days'].ljust(max_len['days'])} | "
-            f"{result['created'].ljust(max_len['created'])} | "
+            f"{result['closed'].ljust(max_len['closed']) if is_closed else result['created'].ljust(max_len['created'])} | "
             f"{result['url'].ljust(max_len['url'])}"
         )
 
@@ -68,6 +71,7 @@ def main() -> None:
     parser.add_argument("-s", "--sort", type=str, required=False, help="Sort by any column name, like '-s user'. Or sort by multiple columns, separated by comma, like '-s user,language'")
     parser.add_argument("-r", "--reverse", action='store_true', required=False, help="Reverse sort")
     parser.add_argument("-n", "--no-features", action='store_true', required=False, help="Do not include issues labeled `feature-request`")
+    parser.add_argument("-c", "--closed", action='store_true', required=False, help="Show closed issues instead of opened issues")
 
     args = parser.parse_args()
     if hasattr(args, 'help'):
@@ -78,6 +82,10 @@ def main() -> None:
     print(f"Labels: {', '.join(LABELS)}")
     if args.no_features:
         print(f"Excluding label: feature-request")
+    if args.closed:
+        print(f"Issue state: closed")
+    else:
+        print(f"Issue state: open")
     if args.sort:
         print(f"Sort by: {args.sort} {'(reversed)' if args.reverse else ''}")
     print("")
@@ -106,8 +114,12 @@ def main() -> None:
         "user": len("UNASSIGNED"),
         "label": len("label"),
         "days": len("days"),
-        "created": len("created")
     }
+
+    if args.closed:
+        result_max_len["closed"] = len("closed")
+    else:
+        result_max_len["created"] = len("created")
 
     # Loop through all repos and labels and make one REST API call for each combination to get the list of open issues
     for repo in REPOS:
@@ -120,7 +132,7 @@ def main() -> None:
             url = f"https://api.github.com/repos/Azure/{repo}/issues"
 
             params = {
-                "state": "open",
+                "state": "closed" if args.closed else "open",
                 "labels": label,
             }
 
@@ -131,6 +143,10 @@ def main() -> None:
                 return
 
             issues = response.json()
+
+            # Enable this for project service response in JSON format
+            #import json
+            #print(json.dumps(issues, indent=4))
 
             for issue in issues:
                 # Skip pull requests. We only want to list GitHub issues
@@ -156,8 +172,13 @@ def main() -> None:
                         labels.append(label['name'])
 
                 # Parse the created date and convert it to a datetime object, UTC time zone
-                created = datetime.strptime(issue['created_at'], "%Y-%m-%dT%H:%M:%SZ")
-                created = created.replace(tzinfo=timezone.utc)
+                if (args.closed):
+                    closed = datetime.strptime(issue['closed_at'], "%Y-%m-%dT%H:%M:%SZ")
+                    closed = closed.replace(tzinfo=timezone.utc)
+                else:
+                    created = datetime.strptime(issue['created_at'], "%Y-%m-%dT%H:%M:%SZ")
+                    created = created.replace(tzinfo=timezone.utc)
+
 
                 # Extract only the info you need from the result, to build one row in the output table
                 result : Dict[str,str] = {
@@ -167,9 +188,14 @@ def main() -> None:
                     "language": extract_language(issue['html_url']),
                     "user": ", ".join([assignee['login'].lower() for assignee in issue['assignees']]),
                     "label": ", ".join(labels),
-                    "created": created.date().strftime("%Y-%m-%d"),
-                    "days": str((datetime.now(timezone.utc).date() - created.date()).days)
                 }
+                if args.closed:
+                    result["closed"] = closed.date().strftime("%Y-%m-%d")
+                    result["days"] = str((datetime.now(timezone.utc).date() - closed.date()).days)
+                else:
+                    result["created"] = created.date().strftime("%Y-%m-%d")
+                    result["days"] = str((datetime.now(timezone.utc).date() - created.date()).days)
+
 
                 # Update the max length of each column if needed, so we can align columns during printout
                 for key in result_max_len.keys():

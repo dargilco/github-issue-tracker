@@ -11,7 +11,7 @@ python gh_issues.py -h
 You will see the following:
 
 ```txt
-usage: gh_issues.py [-h] [-s SORT] [-r] [-n]
+usage: gh_issues.py [-h] [-s SORT] [-r] [-n] [-c]
 
 List open GitHub issues in repositories azure-sdk-for-python, azure-sdk-for-net, azure-sdk-for-java, azure-sdk-for-js.
 Only issues with labels AI Projects, AI Model Inference are shown.
@@ -22,6 +22,7 @@ options:
   -s SORT, --sort SORT  Sort by any column name, like '-s user'. Or sort by multiple columns, separated by comma, like '-s user,language'
   -r, --reverse         Reverse sort
   -n, --no-features     Do not include issues labeled `feature-request`
+  -c, --closed          Show closed issues instead of opened issues
 ```
 
 ## Set environment variable GITHUB_TOKEN before running the script

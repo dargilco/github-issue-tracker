@@ -95,7 +95,7 @@ def print_html_report(args, results: List[Dict[str, Any]], max_len: Dict[str, in
             f.write(f"<p><b>Sort by:</b> {args.sort} {'(reversed)' if args.reverse else ''}</p>\n")
         f.write("<br>\n")
 
-        f.write("<html><body><table border='1'>\n")
+        f.write("<html><body><table border='1' style='border-collapse: collapse;'>\n")
         f.write("<tr style='background-color: lightblue;'>")
         f.write(f"<th>{'user'.ljust(max_len['user'])}</th>")
         f.write(f"<th>{'language'.ljust(max_len['language'])}</th>")

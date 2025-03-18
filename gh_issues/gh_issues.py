@@ -22,9 +22,24 @@ def extract_language(url) -> str:
         return match.group(1)
     raise ValueError(f"Could not extract language from URL: {url}")
 
+def print_console_report_header(args) -> None:
+    print(f"Repos: {', '.join(REPOS)}")
+    print(f"Labels: {', '.join(LABELS)}")
+    if args.no_features:
+        print(f"Excluding label: feature-request")
+    if args.closed:
+        print(f"Issue state: closed")
+    else:
+        print(f"Issue state: open")
+    if args.html:
+        print(f"Output HTML file: {args.html}")
+    if args.sort:
+        print(f"Sort by: {args.sort} {'(reversed)' if args.reverse else ''}")
+    print("")
+
 
 # Print the resulting table to the console
-def print_results(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> None:
+def print_console_report(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> None:
 
     is_closed: bool  = 'closed' in results[0]
 
@@ -61,6 +76,52 @@ def print_results(results: List[Dict[str, Any]], max_len: Dict[str, int]) -> Non
         )
 
 
+def print_html_report(args, results: List[Dict[str, Any]], max_len: Dict[str, int], filename: str) -> None:
+    is_closed: bool = 'closed' in results[0]
+
+    with open(filename, 'w') as f:
+
+        f.write(f"<p><b>Repos:</b> {', '.join(REPOS)}</p>\n")
+        f.write(f"<p><b>Labels:</b> {', '.join(LABELS)}</p>\n")
+        if args.no_features:
+            f.write(f"<p><b>Excluding label:</b> feature-request</p>\n")
+        if args.closed:
+            f.write(f"<p><b>Issue state:</b> closed</p>\n")
+        else:
+            f.write(f"<p><b>Issue state:</b> open</p>\n")
+        if args.html:
+            f.write(f"<p><b>Output HTML file:</b> {args.html}</p>\n")
+        if args.sort:
+            f.write(f"<p><b>Sort by:</b> {args.sort} {'(reversed)' if args.reverse else ''}</p>\n")
+        f.write("<br>\n")
+
+        f.write("<html><body><table border='1'>\n")
+        f.write("<tr style='background-color: lightblue;'>")
+        f.write(f"<th>{'user'.ljust(max_len['user'])}</th>")
+        f.write(f"<th>{'language'.ljust(max_len['language'])}</th>")
+        f.write(f"<th>{'label'.ljust(max_len['label'])}</th>")
+        f.write(f"<th>{'number'.ljust(max_len['number'])}</th>")
+        f.write(f"<th>{'title'.ljust(max_len['title'])}</th>")
+        f.write(f"<th>{'days'.ljust(max_len['days'])}</th>")
+        f.write(f"<th>{'closed'.ljust(max_len['closed']) if is_closed else 'created'.ljust(max_len['created'])}</th>")
+        f.write("<th>url</th>")
+        f.write("</tr>\n")
+
+        for result in results:
+            f.write("<tr>")
+            f.write(f"<td>{result['user'] if result['user'] else 'UNASSIGNED'}</td>")
+            f.write(f"<td>{result['language']}</td>")
+            f.write(f"<td>{result['label'] if result['label'] else 'NO LABELS'}</td>")
+            f.write(f"<td>{result['number']}</td>")
+            f.write(f"<td>{result['title']}</td>")
+            f.write(f"<td>{result['days']}</td>")
+            f.write(f"<td>{result['closed'] if is_closed else result['created']}</td>")
+            f.write(f"<td><a href='{result['url']}'>{result['url']}</a></td>")
+            f.write("</tr>\n")
+
+        f.write("</table></body></html>\n")
+
+
 def main() -> None:
 
     # Parse input argument. We support sorting by multiple columns, separated by comma
@@ -72,23 +133,14 @@ def main() -> None:
     parser.add_argument("-r", "--reverse", action='store_true', required=False, help="Reverse sort")
     parser.add_argument("-n", "--no-features", action='store_true', required=False, help="Do not include issues labeled `feature-request`")
     parser.add_argument("-c", "--closed", action='store_true', required=False, help="Show closed issues instead of opened issues")
+    parser.add_argument("-t", "--html", type=str, required=False, help="Export results as HTML to this file name, for example '-t report.html'")
 
     args = parser.parse_args()
     if hasattr(args, 'help'):
         parser.print_help()
         return
 
-    print(f"Repos: {', '.join(REPOS)}")
-    print(f"Labels: {', '.join(LABELS)}")
-    if args.no_features:
-        print(f"Excluding label: feature-request")
-    if args.closed:
-        print(f"Issue state: closed")
-    else:
-        print(f"Issue state: open")
-    if args.sort:
-        print(f"Sort by: {args.sort} {'(reversed)' if args.reverse else ''}")
-    print("")
+    print_console_report_header(args)
 
     try:
         github_token = os.environ["GITHUB_TOKEN"]
@@ -212,7 +264,11 @@ def main() -> None:
         results.sort(key=sort_key_func, reverse=args.reverse)
 
     # Print the table to the console
-    print_results(results, result_max_len)
+    print_console_report(results, result_max_len)
+
+    if args.html:
+        # Print the table to HTML file
+        print_html_report(args, results, result_max_len, args.html)
 
 
 if __name__ == "__main__":

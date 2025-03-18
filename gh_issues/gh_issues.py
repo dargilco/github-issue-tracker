@@ -2,7 +2,8 @@ import os
 import re
 import requests
 import argparse
-from datetime import datetime, timezone
+import pytz
+from datetime import datetime, timezone, timedelta
 from typing import List, Any, Dict
 
 # Update these lists with the repositories you want to search
@@ -81,8 +82,12 @@ def print_html_report(args, results: List[Dict[str, Any]], max_len: Dict[str, in
 
     with open(filename, 'w') as f:
 
+        pacific = pytz.timezone("US/Pacific")
+        current_time = datetime.now(timezone.utc).astimezone(pacific).strftime("%Y-%m-%d %H:%M:%S %Z")
+
         f.write("<table border='1' style='border-collapse: collapse;'>\n<tr>")
-        f.write(f"<td><b>Repos:</b></td><td>{', '.join(REPOS)}</td></tr>\n")
+        f.write(f"<td><b>Generated on:</b></td><td>{current_time}</td></tr>\n")
+        f.write(f"<tr><td><b>Repos:</b></td><td>{', '.join(REPOS)}</td></tr>\n")
         f.write(f"<tr><td><b>Labels:</b></td><td>{', '.join(LABELS)}</td></tr>\n")
         if args.no_features:
             f.write(f"<tr><td><b>Excluding label:</b></td><td>feature-request</td></tr>\n")
@@ -118,6 +123,7 @@ def print_html_report(args, results: List[Dict[str, Any]], max_len: Dict[str, in
             f.write(f"<td>{result['days']}</td>")
             f.write(f"<td>{result['closed'] if is_closed else result['created']}</td>")
             f.write(f"<td><a href='{result['url']}'>{result['url']}</a></td>")
+            #f.write(f"<td><a href='{result['url']}' target='_blank'>{result['url']}</a></td>")
             f.write("</tr>\n")
 
         f.write("</table></body></html>\n")

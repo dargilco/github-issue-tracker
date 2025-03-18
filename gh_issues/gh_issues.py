@@ -81,19 +81,20 @@ def print_html_report(args, results: List[Dict[str, Any]], max_len: Dict[str, in
 
     with open(filename, 'w') as f:
 
-        f.write(f"<p><b>Repos:</b> {', '.join(REPOS)}</p>\n")
-        f.write(f"<p><b>Labels:</b> {', '.join(LABELS)}</p>\n")
+        f.write("<table border='1' style='border-collapse: collapse;'>\n<tr>")
+        f.write(f"<td><b>Repos:</b></td><td>{', '.join(REPOS)}</td></tr>\n")
+        f.write(f"<tr><td><b>Labels:</b></td><td>{', '.join(LABELS)}</td></tr>\n")
         if args.no_features:
-            f.write(f"<p><b>Excluding label:</b> feature-request</p>\n")
+            f.write(f"<tr><td><b>Excluding label:</b></td><td>feature-request</td></tr>\n")
         if args.closed:
-            f.write(f"<p><b>Issue state:</b> closed</p>\n")
+            f.write(f"<tr><td><b>Issue state:</b></td><td>closed</td></tr>\n")
         else:
-            f.write(f"<p><b>Issue state:</b> open</p>\n")
+            f.write(f"<tr><td><b>Issue state:</b></td><td>open</td></tr>\n")
         if args.html:
-            f.write(f"<p><b>Output HTML file:</b> {args.html}</p>\n")
+            f.write(f"<tr><td><b>Output HTML file:</b></td><td>{args.html}</td></tr>\n")
         if args.sort:
-            f.write(f"<p><b>Sort by:</b> {args.sort} {'(reversed)' if args.reverse else ''}</p>\n")
-        f.write("<br>\n")
+            f.write(f"<tr><td><b>Sort by:</b></td><td>{args.sort} {'(reversed)' if args.reverse else ''}</td></tr>\n")
+        f.write("</table><br>\n")
 
         f.write("<html><body><table border='1' style='border-collapse: collapse;'>\n")
         f.write("<tr style='background-color: lightblue;'>")

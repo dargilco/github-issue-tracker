@@ -13,7 +13,7 @@ REPOS = ["azure-sdk-for-python", "azure-sdk-for-net", "azure-sdk-for-java", "azu
 LABELS = ["AI Projects", "AI Model Inference"]
 
 # Additional labels you want to show in the output table, in the "label" column.
-ADDITIONAL_LABELS= ["feature-request"]
+ADDITIONAL_LABELS= ["feature-request", "issue-addressed"]
 
 
 # Extract the programming language part from a GitHub issue URL
@@ -26,8 +26,12 @@ def extract_language(url) -> str:
 def print_console_report_header(args) -> None:
     print(f"Repos: {', '.join(REPOS)}")
     print(f"Labels: {', '.join(LABELS)}")
-    if args.no_features:
+    if args.no_features and args.no_issue_addressed:
+        print(f"Excluding labels: feature-request, issue-addressed")
+    elif args.no_features:
         print(f"Excluding label: feature-request")
+    elif args.no_issue_addressed:
+        print(f"Excluding label: issue-addressed")
     if args.closed:
         print(f"Issue state: closed")
     else:
@@ -89,8 +93,12 @@ def print_html_report(args, results: List[Dict[str, Any]], max_len: Dict[str, in
         f.write(f"<td><b>Generated on:</b></td><td>{current_time}</td></tr>\n")
         f.write(f"<tr><td><b>Repos:</b></td><td>{', '.join(REPOS)}</td></tr>\n")
         f.write(f"<tr><td><b>Labels:</b></td><td>{', '.join(LABELS)}</td></tr>\n")
-        if args.no_features:
+        if args.no_features and args.no_issue_addressed:
+            f.write(f"<tr><td><b>Excluding labels:</b></td><td>feature-request, issue-addressed</td></tr>\n")
+        elif args.no_features:
             f.write(f"<tr><td><b>Excluding label:</b></td><td>feature-request</td></tr>\n")
+        elif args.no_issue_addressed:
+            f.write(f"<tr><td><b>Excluding label:</b></td><td>issue-addressed</td></tr>\n")
         if args.closed:
             f.write(f"<tr><td><b>Issue state:</b></td><td>closed</td></tr>\n")
         else:
@@ -138,7 +146,8 @@ def main() -> None:
     )
     parser.add_argument("-s", "--sort", type=str, required=False, help="Sort by any column name, like '-s user'. Or sort by multiple columns, separated by comma, like '-s user,language'")
     parser.add_argument("-r", "--reverse", action='store_true', required=False, help="Reverse sort")
-    parser.add_argument("-n", "--no-features", action='store_true', required=False, help="Do not include issues labeled `feature-request`")
+    parser.add_argument("-f", "--no-features", action='store_true', required=False, help="Do not include issues labeled `feature-request`")
+    parser.add_argument("-a", "--no-issue-addressed", action='store_true', required=False, help="Do not include issues labeled `issue-addressed`")
     parser.add_argument("-c", "--closed", action='store_true', required=False, help="Show closed issues instead of opened issues")
     parser.add_argument("-t", "--html", type=str, required=False, help="Export results as HTML to this file name, for example '-t report.html'")
 
@@ -218,6 +227,10 @@ def main() -> None:
 
                 # Skip showing issues labeled as `feature-request` if the user requested it
                 if (args.no_features and 'feature-request' in [label['name'] for label in issue['labels']]):
+                    continue
+
+                # Skip showing issues labeled as `issue-addressed` if the user requested it
+                if (args.no_issue_addressed and 'issue-addressed' in [label['name'] for label in issue['labels']]):
                     continue
 
                 # We don't show all the labels, only the ones we care about as defined above.

@@ -15,7 +15,6 @@ usage: gh_issues.py [-h] [-s SORT] [-r] [-f] [-a] [-c] [-t HTML]
 
 List open GitHub issues in repositories azure-sdk-for-python, azure-sdk-for-net, azure-sdk-for-java, azure-sdk-for-js.
 Only issues with labels AI Projects, AI Model Inference are shown.
-You first need to set the environment variable GITHUB_TOKEN.
 
 options:
   -h, --help            show this help message and exit

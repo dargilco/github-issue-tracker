@@ -141,7 +141,7 @@ def main() -> None:
 
     # Parse input argument. We support sorting by multiple columns, separated by comma
     parser = argparse.ArgumentParser(
-        description=f"List open GitHub issues in repositories {', '.join(REPOS)}.\nOnly issues with labels {', '.join(LABELS)} are shown.\nYou first need to set the environment variable GITHUB_TOKEN.",
+        description=f"List open GitHub issues in repositories {', '.join(REPOS)}.\nOnly issues with labels {', '.join(LABELS)} are shown.\n",
         formatter_class=argparse.RawTextHelpFormatter
     )
     parser.add_argument("-s", "--sort", type=str, required=False, help="Sort by any column name, like '-s user'. Or sort by multiple columns, separated by comma, like '-s user,language'")

@@ -158,6 +158,8 @@ def main() -> None:
 
     print_console_report_header(args)
 
+    # Since these are public repos, we don't need to authenticate with a token.
+    """
     try:
         github_token = os.environ["GITHUB_TOKEN"]
     except KeyError:
@@ -169,6 +171,7 @@ def main() -> None:
         )
         parser.print_help()
         return
+    """
 
     # Will hold the resulting table to print to console
     results: List[Dict[str, str]] = []
@@ -193,10 +196,15 @@ def main() -> None:
     for repo in REPOS:
         for label in LABELS:
 
+            # Since these are public repos, we don't need to authenticate with a token.
+            """
             # See https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#list-repository-issues
             headers = {
                 "Authorization": f"token {github_token}"
             }
+            """
+            headers = None
+
             url = f"https://api.github.com/repos/Azure/{repo}/issues"
 
             params = {

@@ -10,7 +10,7 @@ from typing import List, Any, Dict
 REPOS = ["azure-sdk-for-python", "azure-sdk-for-net", "azure-sdk-for-java", "azure-sdk-for-js"]
 
 # And the labels you want to search
-LABELS = ["AI Projects", "AI Model Inference"]
+LABELS = ["AI Agents", "AI Projects", "AI Model Inference"]
 
 # Additional labels you want to show in the output table, in the "label" column.
 ADDITIONAL_LABELS= ["feature-request", "issue-addressed"]

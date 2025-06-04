@@ -24,6 +24,8 @@ def extract_language(url) -> str:
     raise ValueError(f"Could not extract language from URL: {url}")
 
 def print_console_report_header(args) -> None:
+    pacific = pytz.timezone("US/Pacific")
+    print(f"Time: {datetime.now(timezone.utc).astimezone(pacific).strftime('%Y-%m-%d %H:%M:%S %Z')}")
     print(f"Repos: {', '.join(REPOS)}")
     print(f"Labels: {', '.join(LABELS)}")
     if args.no_features and args.no_issue_addressed:
@@ -40,7 +42,6 @@ def print_console_report_header(args) -> None:
         print(f"Output HTML file: {args.html}")
     if args.sort:
         print(f"Sort by: {args.sort} {'(reversed)' if args.reverse else ''}")
-    print("")
 
 
 # Print the resulting table to the console
@@ -48,6 +49,8 @@ def print_console_report(results: List[Dict[str, Any]], max_len: Dict[str, int])
 
     is_closed: bool  = 'closed' in results[0]
 
+    print("Items found: " + str(len(results)))
+    print("")
     print(
         f"{'user'.ljust(max_len['user'])} | " +
         f"{'language'.ljust(max_len['language'])} | " +
@@ -107,6 +110,7 @@ def print_html_report(args, results: List[Dict[str, Any]], max_len: Dict[str, in
             f.write(f"<tr><td><b>Output HTML file:</b></td><td>{args.html}</td></tr>\n")
         if args.sort:
             f.write(f"<tr><td><b>Sort by:</b></td><td>{args.sort} {'(reversed)' if args.reverse else ''}</td></tr>\n")
+        f.write(f"<tr><td><b>Items found:</b></td><td>{len(results)}</td></tr>\n")
         f.write("</table><br>\n")
 
         f.write("<html><body><table border='1' style='border-collapse: collapse;'>\n")

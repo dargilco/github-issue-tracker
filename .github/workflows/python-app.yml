@@ -23,13 +23,14 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Create a new GitHub issues report
       run: |
-        python gh_issues.py -s days,user -f -a -n -t index.html
+        mkdir build_outputs_folder |
+        python gh_issues.py -s days,user -f -a -n -t build_outputs_folder/index.html
     - name: Upload index.html as artifact
       # See https://github.com/actions/upload-pages-artifact
       uses: actions/upload-pages-artifact@v3
       with:
         name: github-pages
-        path: ./index.html
+        path: build_outputs_folder/
   # See https://github.com/actions/deploy-pages
   deploy:
     runs-on: ubuntu-latest

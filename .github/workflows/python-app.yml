@@ -30,3 +30,8 @@ jobs:
     - name: Create a new GitHub issues report
       run: |
         python gh_issues.py -s days,user -f -a -n -t index.html
+    - name: Upload index.html as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: index-html-artifact
+        path: ./index.html

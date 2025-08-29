@@ -24,7 +24,7 @@ jobs:
     - name: Create a new GitHub issues report
       run: |
         mkdir build_outputs_folder |
-        python gh_issues.py -s days,user -f -a -n -t build_outputs_folder/index.html
+        python gh_issues.py -s days,user -f -a -t build_outputs_folder/index.html
     - name: Upload index.html as artifact
       # See https://github.com/actions/upload-pages-artifact
       uses: actions/upload-pages-artifact@v3

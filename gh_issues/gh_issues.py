@@ -129,7 +129,6 @@ def print_html_report(args, results: List[Dict[str, Any]], max_len: Dict[str, in
         f.write(f"<th>{'title'.ljust(max_len['title'])}</th>")
         f.write(f"<th>{'days'.ljust(max_len['days'])}</th>")
         f.write(f"<th>{'closed'.ljust(max_len['closed']) if is_closed else 'created'.ljust(max_len['created'])}</th>")
-        f.write("<th>url</th>")
         f.write("</tr>\n")
 
         for result in results:
@@ -137,12 +136,10 @@ def print_html_report(args, results: List[Dict[str, Any]], max_len: Dict[str, in
             f.write(f"<td>{result['user'] if result['user'] else 'UNASSIGNED'}</td>")
             f.write(f"<td>{result['language']}</td>")
             f.write(f"<td>{result['label'] if result['label'] else 'NO LABELS'}</td>")
-            f.write(f"<td>{result['number']}</td>")
+            f.write(f"<td><a href='{result['url']}' target='_blank'>{result['number']}</a></td>")
             f.write(f"<td>{result['title']}</td>")
             f.write(f"<td>{result['days']}</td>")
             f.write(f"<td>{result['closed'] if is_closed else result['created']}</td>")
-            f.write(f"<td><a href='{result['url']}'>{result['url']}</a></td>")
-            #f.write(f"<td><a href='{result['url']}' target='_blank'>{result['url']}</a></td>")
             f.write("</tr>\n")
 
         f.write("</table></body></html>\n")

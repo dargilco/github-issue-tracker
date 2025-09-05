@@ -27,10 +27,10 @@ jobs:
         cp ./index.html build_outputs_folder/index.html
     - name: Create a new GitHub issues report, sorted by days
       run: |
-        python gh_issues.py -s days,user -f -a -n -t build_outputs_folder/report_days.html
+        python gh_issues.py -s days,user -f -a -t build_outputs_folder/report_days.html
     - name: Create a new GitHub issues report, sorted by user
       run: |
-        python gh_issues.py -s user,days -f -a -n -t build_outputs_folder/report_user.html
+        python gh_issues.py -s user,days -f -a -t build_outputs_folder/report_user.html
     - name: Upload artifact folder to GitHub Pages
       # See https://github.com/actions/upload-pages-artifact
       uses: actions/upload-pages-artifact@v3

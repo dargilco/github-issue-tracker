@@ -11,10 +11,10 @@ python gh_issues.py -h
 You will see the following:
 
 ```txt
-usage: gh_issues.py [-h] [-s SORT] [-r] [-f] [-a] [-c] [-t HTML]
+usage: gh_issues.py [-h] [-s SORT] [-r] [-f] [-a] [-n] [-c] [-t HTML]
 
 List open GitHub issues in repositories azure-sdk-for-python, azure-sdk-for-net, azure-sdk-for-java, azure-sdk-for-js.
-Only issues with labels AI Projects, AI Model Inference are shown.
+Only issues with labels AI Agents, AI Projects are shown.
 
 options:
   -h, --help            show this help message and exit
@@ -23,6 +23,8 @@ options:
   -f, --no-features     Do not include issues labeled `feature-request`
   -a, --no-issue-addressed
                         Do not include issues labeled `issue-addressed`
+  -n, --no-needs-author-feedback
+                        Do not include issues labeled `needs-author-feedback`
   -c, --closed          Show closed issues instead of opened issues
   -t HTML, --html HTML  Export results as HTML to this file name, for example '-t report.html'
 ```

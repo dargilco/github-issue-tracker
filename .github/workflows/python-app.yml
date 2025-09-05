@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies and run the script gh_issues to generated a new repot
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
-name: Python application
+name: Create GitHub Issues Report
 
 on:
   workflow_dispatch:
@@ -21,18 +21,22 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Create artifact folder and copy index.html there
+      run: |
+        mkdir build_outputs_folder |
+        cp ./index.html build_outputs_folder/index.html
     - name: Create a new GitHub issues report, sorted by days
       run: |
-        python gh_issues.py -s days,user -f -a -n -t report_days.html
+        python gh_issues.py -s days,user -f -a -n -t build_outputs_folder/report_days.html
     - name: Create a new GitHub issues report, sorted by user
       run: |
-        python gh_issues.py -s user,days -f -a -n -t report_user.html
-    - name: Upload *.html as artifacts
+        python gh_issues.py -s user,days -f -a -n -t build_outputs_folder/report_user.html
+    - name: Upload artifact folder to GitHub Pages
       # See https://github.com/actions/upload-pages-artifact
       uses: actions/upload-pages-artifact@v3
       with:
         name: github-pages
-        path: ./*.html
+        path: build_outputs_folder/
   # See https://github.com/actions/deploy-pages
   deploy:
     runs-on: ubuntu-latest

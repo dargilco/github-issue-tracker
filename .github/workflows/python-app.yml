@@ -21,15 +21,18 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Create a new GitHub issues report
+    - name: Create a new GitHub issues report, sorted by days
       run: |
-        python gh_issues.py -s days,user -f -a -n -t index.html
-    - name: Upload index.html as artifact
+        python gh_issues.py -s days,user -f -a -n -t report_days.html
+    - name: Create a new GitHub issues report, sorted by user
+      run: |
+        python gh_issues.py -s user,days -f -a -n -t report_user.html
+    - name: Upload *.html as artifacts
       # See https://github.com/actions/upload-pages-artifact
       uses: actions/upload-pages-artifact@v3
       with:
         name: github-pages
-        path: ./index.html
+        path: ./*.html
   # See https://github.com/actions/deploy-pages
   deploy:
     runs-on: ubuntu-latest
